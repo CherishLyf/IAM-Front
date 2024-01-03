@@ -35,21 +35,6 @@ const options = {
           component: () => import('@/pages/demo')
         },
         {
-          path: 'parent1',
-          name: '父级路由1',
-          meta: {
-            icon: 'dashboard'
-          },
-          component: BlankView,
-          children: [
-            {
-              path: 'demo1',
-              name: '演示页面1',
-              component: () => import('@/pages/demo')
-            }
-          ]
-        },
-        {
           path: 'parent2',
           name: '父级路由2',
           meta: {
@@ -100,7 +85,22 @@ const options = {
             },
             component: () => import('@/pages/demo')
           }
-        }
+        },
+        {
+          path: 'system',
+          name: '系统管理',
+          meta: {
+            icon: 'appstore'
+          },
+          component: PageView,
+          children: [
+            {
+              path: 'menu',
+              name: '菜单管理',
+              component: () => import('@/pages/system/menu')
+            }
+          ]
+        },
       ]
     }
   ]

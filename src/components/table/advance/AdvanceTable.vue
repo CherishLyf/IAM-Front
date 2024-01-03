@@ -218,7 +218,7 @@ export default {
 
 <style scoped lang="less">
 .advanced-table {
-  overflow-y: auto;
+  // overflow-y: auto;
   background-color: @component-background;
   .header-bar {
     padding: 16px 24px;
