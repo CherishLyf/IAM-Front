@@ -31,7 +31,7 @@ module.exports = {
   },
   footerLinks: [
     //页面底部链接，{link: '链接地址', name: '名称/显示文字', icon: '图标，支持 ant design vue 图标库'}
-    { link: '/', name: '返回首页' },
+    { link: '/', name: '首页' },
     // { link: 'https://github.com/iczer/vue-antd-admin', icon: 'github' },
     // { link: 'https://ant.design', name: 'Ant Design' }
   ]
