@@ -30,13 +30,13 @@
               </template>
             </action-columns>
           </a-tooltip>
-          <a-tooltip title="全屏">
+          <!-- <a-tooltip title="全屏">
             <a-icon
               @click="toggleScreen"
               class="action"
               :type="fullScreen ? 'fullscreen-exit' : 'fullscreen'"
             />
-          </a-tooltip>
+          </a-tooltip> -->
         </div>
       </div>
       <a-table
@@ -221,7 +221,8 @@ export default {
   // overflow-y: auto;
   background-color: @component-background;
   .header-bar {
-    padding: 16px 24px;
+    // padding: 16px 24px;
+    padding: 16px 0px;
     display: flex;
     align-items: center;
     border-radius: 4px;

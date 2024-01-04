@@ -45,13 +45,13 @@
                 type="vertical-align-bottom"
               />
             </a-tooltip>
-            <a-tooltip
+            <!-- <a-tooltip
               title="添加搜索"
               :mouseEnterDelay="0.5"
               :get-popup-container="() => $refs.root"
             >
               <a-icon :class="{ active: col.searchAble }" @click="setSearch(col)" type="search" />
-            </a-tooltip>
+            </a-tooltip> -->
           </template>
         </a-list-item>
       </a-list>
