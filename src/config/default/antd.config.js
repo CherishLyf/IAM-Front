@@ -37,7 +37,8 @@ const ANTD = {
       'menu-dark-highlight-color': '#fefefe',
       'menu-dark-selected-item-icon-color': '#fefefe',
       'menu-dark-arrow-color': '#fefefe',
-      'btn-primary-color': '#fefefe'
+      'btn-primary-color': '#fefefe',
+      'border-radius-base': '2px',
     },
     light: {
       'layout-body-background': '#f0f2f5',
@@ -60,7 +61,8 @@ const ANTD = {
       'menu-dark-highlight-color': '#fefefe',
       'menu-dark-selected-item-icon-color': '#fefefe',
       'menu-dark-arrow-color': '#fefefe',
-      'btn-primary-color': '#fefefe'
+      'btn-primary-color': '#fefefe',
+      'border-radius-base': '2px',
     },
     night: {
       'layout-body-background': '#000',
@@ -83,7 +85,8 @@ const ANTD = {
       'menu-dark-highlight-color': '#fefefe',
       'menu-dark-selected-item-icon-color': '#fefefe',
       'menu-dark-arrow-color': '#fefefe',
-      'btn-primary-color': '#fefefe'
+      'btn-primary-color': '#fefefe',
+      'border-radius-base': '2px',
     }
   }
 }

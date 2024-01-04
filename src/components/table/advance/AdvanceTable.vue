@@ -19,6 +19,7 @@
           </search-area>
         </div>
         <div class="actions">
+          <slot name="action-extra"></slot>
           <a-tooltip title="刷新">
             <a-icon @click="refresh" class="action" :type="loading ? 'loading' : 'reload'" />
           </a-tooltip>
@@ -253,6 +254,8 @@ export default {
       text-align: right;
       font-size: 17px;
       color: @text-color;
+      display: flex;
+      align-items: center;
       .action {
         margin: 0 8px;
         cursor: pointer;

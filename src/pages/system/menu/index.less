@@ -1,13 +1,40 @@
 .menu-page {
   height: 100%;
-  background-color: @base-bg-color;
+  // background-color: @base-bg-color;
   text-align: center;
-  padding: 24px;
   //margin-top: -24px;
   .table-btn {
     margin-right: 8px;
     &:last-child {
       margin-right: 0;
     }
+  }
+
+  .table-search {
+    margin-bottom: 16px;
+    background: #fff;
+    padding: 24px 24px 0;
+    border-radius: 2px;
+    .ant-card-body {
+      padding-bottom: 0;
+    }
+  }
+  
+  .table-wrapper {
+    background: #fff;
+    padding: 0 24px 24px;
+    border-radius: 2px;
+  }
+
+  .search-action {
+    display: block;
+    float: right;
+    .action-btn {
+      margin-right: 8px;
+    }
+  }
+
+  .action-extra {
+    display: inline-block;
   }
 }
