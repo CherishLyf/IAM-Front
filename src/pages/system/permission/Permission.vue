@@ -5,7 +5,7 @@
         <a-row>
           <a-col :md="8" :sm="24">
             <a-form-item
-              label="菜单名称"
+              label="权限名称"
               :labelCol="{ span: 5 }"
               :wrapperCol="{ span: 18, offset: 1 }"
             >
@@ -37,30 +37,16 @@
     </div>
     <div class="table-wrapper">
       <advance-table
-        :columns="columns"
-        :data-source="dataSource"
-        title="菜单列表"
+        :columns="tableColumns"
+        :data-source="tableData"
+        title="权限列表"
         :loading="tableLoading"
         rowKey="id"
-        @search="onSearch"
         @refresh="onRefresh"
-        :format-conditions="true"
-        @reset="onReset"
         :defaultExpandAllRows="true"
-        :pagination="{
-          current: page,
-          pageSize: pageSize,
-          total: total,
-          showSizeChanger: true,
-          showLessItems: true,
-          showQuickJumper: true,
-          showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，总计 ${total} 条`,
-          onChange: onPageChange,
-          onShowSizeChange: onSizeChange
-        }"
       >
         <div slot="action-extra">
-          <a-button @click="isModalShow = true" style="margin: 0 8px 0 0" icon="plus" type="primary">新建</a-button>
+          <a-button @click="handleCreatePermission" style="margin: 0 8px 0 0" icon="plus" type="primary">新建</a-button>
         </div>
         <span slot="status" slot-scope="{ text }">
           <a-tag v-if="text === 1" color="green">显示</a-tag>
@@ -68,13 +54,13 @@
         </span>
         <span slot="resourceType" slot-scope="{ text }">
           <a-tag v-if="text === 'directory'" color="purple">目录</a-tag>
-          <a-tag v-if="text === 'menu'" color="orange">菜单</a-tag>
+          <a-tag v-if="text === 'menu'" color="orange">权限</a-tag>
           <a-tag v-if="text === 'action'" color="blue">动作</a-tag>
           <a-tag v-if="text === 'button'" color="cyan">按钮</a-tag>
         </span>
-        <div slot="action">
-          <a class="table-btn" href="#">子菜单</a>
-          <a class="table-btn" href="#">编辑</a>
+        <div slot="action" slot-scope="{ record }">
+          <a class="table-btn" href="#" @click="handleEditSubPermission(record)">子权限</a>
+          <a class="table-btn" href="#" @click="handleEditPermission(record)">编辑</a>
           <a class="table-btn" href="#">删除</a>
         </div>
       </advance-table>
@@ -82,41 +68,43 @@
 
     <a-drawer
       title="编辑"
-      width="700"
       :visible="isModalShow"
-      :body-style="{ paddingBottom: '80px' }"
+      wrapClassName="custom-ant-drawer"
+      :bodyStyle="{ paddingBottom: '80px' }"
       @close="handleCloseModal"
     >
-      <a-form-model :form="modalForm" :rules="modalFormRules" layout="vertical">
+      <a-form-model ref="modalForm" :model="modalForm" :rules="modalFormRules" layout="vertical">
         <a-row :gutter="32">
-          <a-col :span="12">
-            <a-form-model-item label="菜单名称" prop="name">
+          <a-col :md="12">
+            <a-form-model-item label="权限名称" prop="name">
               <a-input
                 v-model="modalForm.name"
-                placeholder="请填写菜单名称"
+                placeholder="请填写权限名称"
               />
             </a-form-model-item>
           </a-col>
-          <a-col :span="12">
-            <a-form-model-item label="上级菜单">
+          <a-col :md="12" :sm="24">
+            <a-form-model-item label="上级权限">
               <a-tree-select
                 v-model="modalForm.parentId"
                 style="width: 100%"
                 :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
                 :tree-data="dataSource"
-                placeholder="请选择上级菜单"
+                placeholder="请选择上级权限"
                 :replace-fields="{
                   title: 'name',
                   key: 'id',
                   value: 'id',
                 }"
+                allowClear
+                showSearch
               >
               </a-tree-select>
             </a-form-model-item>
           </a-col>
         </a-row>
         <a-row :gutter="32">
-          <a-col :span="12">
+          <a-col :md="12" :sm="24">
             <a-form-model-item>
               <span slot="label">图标&nbsp;
                 <a-tooltip title="图标库 ICON 名称">
@@ -126,7 +114,7 @@
               <a-input v-model="modalForm.icon" placeholder="请填写图标名称" />
             </a-form-model-item>
           </a-col>
-          <a-col :span="12">
+          <a-col :md="12">
             <a-form-model-item label="排序">
               <a-input-number
                 style="width: 100%"
@@ -138,10 +126,10 @@
           </a-col>
         </a-row>
         <a-row :gutter="32">
-          <a-col :span="12">
+          <a-col :md="12" :sm="24">
             <a-form-model-item prop="resourceType">
               <span slot="label">类型&nbsp;
-                <a-tooltip title="目录：包含一个或多个菜单，菜单：具体对应某一个页面，按钮：页面元素">
+                <a-tooltip title="目录：包含一个或多个权限，权限：具体对应某一个页面，按钮：页面元素">
                   <a-icon type="question-circle-o" />
                 </a-tooltip>
               </span>
@@ -156,7 +144,7 @@
           </a-col>
         </a-row>
         <a-row :gutter="32">
-          <a-col :span="12">
+          <a-col :md="12" :sm="24">
             <a-form-model-item prop="permissionCode">
               <span slot="label">权限标识&nbsp;
                 <a-tooltip title="权限唯一标识">
@@ -169,7 +157,7 @@
               />
             </a-form-model-item>
           </a-col>
-          <a-col v-if="modalForm.resourceType === 'directory' || modalForm.resourceType === 'menu'" :span="12">
+          <a-col v-if="modalForm.resourceType === 'directory' || modalForm.resourceType === 'menu'" :md="12" :sm="24">
             <a-form-model-item label="路径">
               <a-input
                 v-model="modalForm.path"
@@ -192,8 +180,8 @@
           zIndex: 1
         }"
       >
-        <a-button :style="{ marginRight: '8px' }" @click="handleCloseModal"> Cancel </a-button>
-        <a-button type="primary" @click="handleCloseModal"> Submit </a-button>
+        <a-button :style="{ marginRight: '8px' }" @click="handleCloseModal"> 取消 </a-button>
+        <a-button type="primary" @click="handleModalSubmit"> 提交 </a-button>
       </div>
     </a-drawer>
   </div>
@@ -211,9 +199,9 @@ export default {
   },
   data() {
     return {
-      columns: [
+      tableColumns: [
         {
-          title: '菜单名称',
+          title: '权限名称',
           dataIndex: 'name',
           key: 'name'
         },
@@ -248,10 +236,10 @@ export default {
         }
       ],
       tableLoading: false,
-      dataSource: [
+      tableData: [
         {
           id: 1,
-          name: '菜单1',
+          name: '权限1',
           permissionCode: 'menu-1',
           sort: 10,
           status: 1,
@@ -259,7 +247,7 @@ export default {
           children: [
             {
               id: 2,
-              name: '菜单1-1',
+              name: '权限1-1',
               permissionCode: 'menu-1-1',
               sort: 10,
               status: 2,
@@ -268,10 +256,8 @@ export default {
           ]
         }
       ],
-      page: 1,
-      pageSize: 10,
-      total: 0,
 
+      // 抽屉展示
       isModalShow: false,
       modalForm: {
         name: '',
@@ -283,9 +269,9 @@ export default {
         path: '',
       },
       modalFormRules: {
-        name: { required: true, message: '请填写菜单名称', trigger: 'blur' },
-        resourceType: { required: true, message: '请选择类型', trigger: 'change' },
-        permissionCode: { required: true, message: '请填写权限标识' },
+        name: [{ required: true, message: '请填写权限名称', trigger: 'blur' }],
+        resourceType: [ { required: true, message: '请选择类型', trigger: 'change' }],
+        permissionCode: [{ required: true, message: '请填写权限标识' }],
       }
     }
   },
@@ -296,37 +282,68 @@ export default {
     }
   },
   methods: {
-    getGoodList() {
+    getTableData() {
       this.loading = true
+
     },
-    getColumns() {},
-    onSearch(conditions, searchOptions) {
-      console.log(searchOptions)
-      this.page = 1
-      // this.conditions = conditions
-      this.getGoodList()
+    onRefresh() {
+      this.getTableData()
     },
-    onSizeChange(current, size) {
-      this.page = 1
-      this.pageSize = size
-      this.getGoodList()
+    // 新建权限
+    handleCreatePermission() {
+      this.handleOpenModal();
+      this.initModalForm({
+        name: '',
+        parentId: null,
+        icon: '',
+        sort: null,
+        resourceType: '',
+        permissionCode: '',
+        path: '',
+      });
     },
-    onRefresh(conditions) {
-      this.conditions = conditions
-      this.getGoodList()
+    /**
+     * 编辑权限
+     * @param row 表格行元素
+     */
+    handleEditPermission(row) {
+      this.initModalForm({
+        ...row,
+      });
+      this.handleOpenModal();
     },
-    onReset(conditions) {
-      this.conditions = conditions
-      this.getGoodList()
+    /**
+     * 编辑子菜单
+     * @param row 表格行元素
+     */
+    handleEditSubPermission(row) {
+      this.initModalForm({
+        name: '',
+        parentId: row.id,
+        icon: '',
+        sort: null,
+        resourceType: '',
+        permissionCode: '',
+        path: '',
+      });
+      this.handleOpenModal();
     },
-    onPageChange(page, pageSize) {
-      this.page = page
-      this.pageSize = pageSize
-      this.getGoodList()
+    // 初始化 modalForm
+    initModalForm(formData) {
+      this.modalForm = formData;
+    },
+    // 打开弹窗
+    handleOpenModal() {
+      this.isModalShow = true;
     },
     // 关闭弹窗
     handleCloseModal() {
       this.isModalShow = false;
+    },
+    // 弹窗提交
+    handleModalSubmit() {
+      // TODO Submit
+      this.handleCloseModal();
     }
   }
 }

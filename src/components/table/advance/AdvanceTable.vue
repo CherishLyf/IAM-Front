@@ -139,6 +139,7 @@ export default {
   },
   methods: {
     refresh() {
+      // this.$emit('refresh', this.conditions)
       this.$emit('refresh', this.conditions)
     },
     onSearchChange(conditions, searchOptions) {

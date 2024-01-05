@@ -95,9 +95,9 @@ const options = {
           component: PageView,
           children: [
             {
-              path: 'menu',
-              name: '菜单管理',
-              component: () => import('@/pages/system/menu')
+              path: 'permission',
+              name: '权限管理',
+              component: () => import('@/pages/system/permission')
             }
           ]
         },
