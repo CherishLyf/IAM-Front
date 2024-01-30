@@ -150,6 +150,14 @@ export default {
         permissionCode: [{ required: true, message: '请填写权限标识' }]
       }
     }
+  },
+  methods: {
+    handleCloseModal() {
+      this.$emit('cancel');
+    },
+    handleModalSubmit() {
+      this.$emit('submit');
+    }
   }
 }
 </script>
