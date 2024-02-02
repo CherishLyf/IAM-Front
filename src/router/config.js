@@ -98,6 +98,11 @@ const options = {
               path: 'permission',
               name: '权限管理',
               component: () => import('@/pages/system/permission')
+            },
+            {
+              path: 'role',
+              name: '角色管理',
+              component: () => import('@/pages/system/role')
             }
           ]
         },
